@@ -1,0 +1,1 @@
+let _ = ReactDOMRe.renderToElementWithId (App.c []) "app"
