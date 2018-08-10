@@ -1,37 +1,42 @@
 open BSReact
 
-module TodoInput = struct
-  class virtual dispatcher = object
-    method virtual todoInput: RE.Form.t -> unit
-    method virtual todoAdd: RE.Mouse.t -> unit
-  end
+module Todo = struct
+  type t = {
+    desc: string;
+    state: bool
+  }
 
-  let component = RR.statelessComponent "TodoInput"
+  let toggle ({state} as todo) =
+    { todo with state= not state }
 
-  let make ~dispatcher ~todo_input _children = {
+  let component = RR.statelessComponent "Todo"
+
+  let make ~idx ~dispatcher ~todo:{desc; state} _children = {
     component with
     render= fun _self ->
-      div ~className:"todo-input row" [
-        div ~className:"column" [
-          input ~type_:"text" ~onChange:dispatcher#todoInput ~value:todo_input [];
+      let desc =
+        if state then
+          del [ s desc ]
+        else
+          s desc in
+      let visible_index = idx + 1 in
+      tr [
+        td [ s @@ {j|#$(visible_index)|j} ];
+        td [
+          div ~onClick:(dispatcher#todoToggle idx) [
+            desc
+          ]
         ];
-        div ~className:"column" [
-          button ~onClick:dispatcher#todoAdd [
-            s {j|追加|j}
+        td [
+          button ~className:"button" ~onClick:(dispatcher#todoDelete idx) [
+            s "x"
           ]
         ]
       ]
   }
 
-  let c ~dispatcher ~todo_input children =
-    RR.element @@ make ~dispatcher ~todo_input children
-end
-
-class virtual dispatcher = object
-  method virtual todoInput: RE.Form.t -> unit
-  method virtual todoAdd: RE.Mouse.t -> unit
-  method virtual todoToggle: int -> RE.Mouse.t -> unit
-  method virtual todoDelete: int -> RE.Mouse.t -> unit
+  let c ~idx ~dispatcher ~todo children =
+    RR.element @@ make ~idx ~dispatcher ~todo children
 end
 
 let component = RR.statelessComponent "Todo"
@@ -45,7 +50,6 @@ let make ~dispatcher ~todo_input ~todos _children = {
         Todo.c ~idx ~dispatcher ~todo [])
       |> Array.to_list in
     div ~className:"todo-list" [
-      TodoInput.c ~dispatcher ~todo_input [];
       table [
         thead [
           tr [

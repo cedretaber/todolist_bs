@@ -1,8 +1,10 @@
 open BSReact
 
+module Todo = TodoList.Todo
+
 type state = {
   todo_input: string;
-  todos: Todo.t array
+  todos: TodoList.Todo.t array
 }
 
 type action
@@ -37,6 +39,23 @@ let reducer action state = match action, state with
       |> Array.of_list in
     RR.Update { state with todos }
 
+class dispatcher self =
+  let send = self.RR.send in
+  object
+    method todoInput event =
+      let todo_input = (RE.Form.target event)##value in
+      send (ChangeInput todo_input);
+    method todoAdd event =
+      RE.Mouse.preventDefault event;
+      send AddTodo;
+    method todoToggle idx event =
+      RE.Mouse.preventDefault event;
+      send (ToggleTodo idx);
+    method todoDelete idx event =
+      RE.Mouse.preventDefault event;
+      send (DeleteTodo idx);
+  end
+
 let component = RR.reducerComponent "App"
 
 let make _children = {
@@ -44,24 +63,11 @@ let make _children = {
   initialState;
   reducer;
   render= fun self ->
-    let send = self.RR.send in
     let {todo_input; todos} = self.state in
-    let dispatcher = object
-      method todoInput event =
-        let todo_input = (RE.Form.target event)##value in
-        send (ChangeInput todo_input);
-      method todoAdd event =
-        RE.Mouse.preventDefault event;
-        send AddTodo;
-      method todoToggle idx event =
-        RE.Mouse.preventDefault event;
-        send (ToggleTodo idx);
-      method todoDelete idx event =
-        RE.Mouse.preventDefault event;
-        send (DeleteTodo idx);
-    end in
+    let dispatcher = new dispatcher self in
     div ~className:"todo-app" [
       h1 [ s "TODO LIST" ];
+      TodoInput.c ~dispatcher ~todo_input [];
       TodoList.c ~dispatcher ~todo_input ~todos []
     ]
 }
