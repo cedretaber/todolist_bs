@@ -14,13 +14,11 @@ let div ?className ?onClick children =
     () in
   RD.createElementVariadic "div" ~props @@ Array.of_list children
 
-let input ?type_ ?onChange ?onClick ?value ?checked children =
+let input ?type_ ?onChange ?value children =
   let props = RD.props
     ?type_
     ?onChange
-    ?onClick
     ?value
-    ?checked
     () in
   RD.createElementVariadic "input" ~props @@ Array.of_list children
 
