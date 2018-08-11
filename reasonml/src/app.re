@@ -71,7 +71,8 @@ let make = _children => {
     let dispatcher = (new dispatcher)(self);
     <div className="todo-app">
       <h1> (ReasonReact.string("TODO LIST")) </h1>
-      <TodoList dispatcher todo_input todos />
+      <TodoInput dispatcher todo_input />
+      <TodoList dispatcher todos />
     </div>;
   },
 };

@@ -33,13 +33,12 @@ module Todo = {
 
 let component = ReasonReact.statelessComponent("Todo");
 
-let make = (~dispatcher, ~todo_input, ~todos, _children) => {
+let make = (~dispatcher, ~todos, _children) => {
   ...component,
   render: _self => {
     let todos =
       Array.mapi((idx, todo) => <Todo idx dispatcher todo />, todos);
     <div className="todo-list">
-      <TodoInput dispatcher todo_input />
       <table>
         <thead> <tr> <th /> <th /> <th /> </tr> </thead>
         <tbody> ...todos </tbody>
