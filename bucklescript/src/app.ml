@@ -56,21 +56,19 @@ class dispatcher self =
       send (DeleteTodo idx);
   end
 
+let render self =
+  let {todo_input; todos} = self.RR.state in
+  let dispatcher = new dispatcher self in
+  div ~className:"todo-app" [
+    h1 [ s "TODO LIST" ];
+    TodoInput.c ~dispatcher ~todo_input [];
+    TodoList.c ~dispatcher ~todos []
+  ]
+
 let component = RR.reducerComponent "App"
 
-let make _children = {
-  component with
-  initialState;
-  reducer;
-  render= fun self ->
-    let {todo_input; todos} = self.state in
-    let dispatcher = new dispatcher self in
-    div ~className:"todo-app" [
-      h1 [ s "TODO LIST" ];
-      TodoInput.c ~dispatcher ~todo_input [];
-      TodoList.c ~dispatcher ~todos []
-    ]
-}
+let make _children =
+  { component with initialState; reducer; render }
 
 let c children =
   RR.element @@ make children

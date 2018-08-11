@@ -60,19 +60,16 @@ class dispatcher (self) = {
   };
 };
 
+let render = self => {
+  let {todo_input, todos} = self.ReasonReact.state;
+  let dispatcher = (new dispatcher)(self);
+  <div className="todo-app">
+    <h1> (ReasonReact.string("TODO LIST")) </h1>
+    <TodoInput dispatcher todo_input />
+    <TodoList dispatcher todos />
+  </div>;
+};
+
 let component = ReasonReact.reducerComponent("App");
 
-let make = _children => {
-  ...component,
-  initialState,
-  reducer,
-  render: self => {
-    let {todo_input, todos} = self.state;
-    let dispatcher = (new dispatcher)(self);
-    <div className="todo-app">
-      <h1> (ReasonReact.string("TODO LIST")) </h1>
-      <TodoInput dispatcher todo_input />
-      <TodoList dispatcher todos />
-    </div>;
-  },
-};
+let make = _children => {...component, initialState, reducer, render};
