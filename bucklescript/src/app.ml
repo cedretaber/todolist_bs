@@ -68,7 +68,7 @@ let make _children = {
     div ~className:"todo-app" [
       h1 [ s "TODO LIST" ];
       TodoInput.c ~dispatcher ~todo_input [];
-      TodoList.c ~dispatcher ~todo_input ~todos []
+      TodoList.c ~dispatcher ~todos []
     ]
 }
 

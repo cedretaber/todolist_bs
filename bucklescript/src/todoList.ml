@@ -41,7 +41,7 @@ end
 
 let component = RR.statelessComponent "Todo"
 
-let make ~dispatcher ~todo_input ~todos _children = {
+let make ~dispatcher ~todos _children = {
   component with
   render= fun _self ->
     let todos =
@@ -63,5 +63,5 @@ let make ~dispatcher ~todo_input ~todos _children = {
     ]
 }
 
-let c ~dispatcher ~todo_input ~todos children =
-  RR.element @@ make ~dispatcher ~todo_input ~todos children
+let c ~dispatcher ~todos children =
+  RR.element @@ make ~dispatcher ~todos children
