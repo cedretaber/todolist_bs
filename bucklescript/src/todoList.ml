@@ -21,7 +21,7 @@ module Todo = struct
           s desc in
       let visible_index = idx + 1 in
       tr [
-        td [ s @@ {j|#$(visible_index)|j} ];
+        td [ s {j|#$(visible_index)|j} ];
         td [
           div ~onClick:(dispatcher#todoToggle idx) [
             desc
